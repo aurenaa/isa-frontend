@@ -1,1 +1,70 @@
-<p>register works!</p>
+<div class="simple-form">
+  <h2>Register</h2>
+  
+  <div *ngIf="message" [class]="messageClass">
+    {{ message }}
+  </div>
+  
+  <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+    <input 
+      type="text" 
+      [(ngModel)]="userData.username" 
+      name="username" 
+      placeholder="Username"
+      required
+    >
+    
+    <input 
+      type="email" 
+      [(ngModel)]="userData.email" 
+      name="email" 
+      placeholder="Email"
+      required
+    >
+    
+    <input 
+      type="password" 
+      [(ngModel)]="userData.password" 
+      name="password" 
+      placeholder="Password"
+      required
+    >
+    
+    <input 
+      type="password" 
+      [(ngModel)]="confirmPassword" 
+      name="confirmPassword" 
+      placeholder="Confirm Password"
+      required
+    >
+    
+    <input 
+      type="text" 
+      [(ngModel)]="userData.firstname" 
+      name="firstname" 
+      placeholder="First Name (optional)"
+    >
+    
+    <input 
+      type="text" 
+      [(ngModel)]="userData.lastname" 
+      name="lastname" 
+      placeholder="Last Name (optional)"
+    >
+    
+    <input 
+      type="text" 
+      [(ngModel)]="userData.address" 
+      name="address" 
+      placeholder="Address (optional)"
+    >
+    
+    <button type="submit" [disabled]="loading || !registerForm.form.valid">
+      {{ loading ? 'Registering...' : 'Register' }}
+    </button>
+  </form>
+  
+  <p>
+    Already have an account? <a routerLink="/login">Login here</a>
+  </p>
+</div>
