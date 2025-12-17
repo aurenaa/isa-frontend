@@ -20,18 +20,20 @@ export class AuthService {
   }
 
   login(username: string, password: string): Observable<any> {
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
+    const loginData = {
+      username: username,
+      password: password
+    };
 
-    return this.http.post(this.config.login_url, formData, { 
-      withCredentials: true
-    }).pipe(
-      tap(() => {
-        this.loggedIn.next(true);
-        localStorage.setItem('isLoggedIn', 'true');
-      })
-    );
+  return this.http.post(this.config.login_url, loginData).pipe(
+    tap((res: any) => {
+      this.loggedIn.next(true);
+      localStorage.setItem('isLoggedIn', 'true');
+      if (res.accessToken) {
+        localStorage.setItem('jwt', res.accessToken);
+      }
+    })
+  );
   }
 
   register(userData: any): Observable<any> {
