@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <a class="navbar-brand" routerLink="/home">
           <img src="assets/logo_name.png" 
-               alt="Logo" 
+               alt="Jutjubic" 
                class="logo-img">
         </a>
         <form class="search-form">
@@ -29,6 +29,33 @@
   </div>
 </header>
 
-<main>
-  <router-outlet></router-outlet>
-</main>
+<div class="main-container">
+  <nav class="sidebar bg-light">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link active" routerLink="/home" routerLinkActive="active">
+          <i class="bi bi-house me-2"></i> Home
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/browse" routerLinkActive="active">
+          <i class="bi bi-compass me-2"></i> Browse
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/liked" routerLinkActive="active">
+          <i class="bi bi-heart me-2"></i> Liked Videos
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/settings" routerLinkActive="active">
+          <i class="bi bi-gear me-2"></i> Settings
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
