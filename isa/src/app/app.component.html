@@ -1,14 +1,31 @@
 <header>
   <div class="header-content">
-    <h1>Jutjubic</h1>
-    
-    <div class="nav-buttons">
-      <a *ngIf="!isLoggedIn" routerLink="/register">Register</a>
-      <a *ngIf="!isLoggedIn" routerLink="/login">Login</a>
-      
-      <a *ngIf="isLoggedIn" routerLink="/home">Home</a>
-      <button *ngIf="isLoggedIn" (click)="logout()">Logout</button>
-    </div>
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" routerLink="/home">
+          <img src="assets/logo_name.png" 
+               alt="Logo" 
+               class="logo-img">
+        </a>
+        <form class="search-form">
+          <div class="search-wrapper">
+            <input
+              class="form-control search-input"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+            >
+            <i class="bi bi-search search-icon"></i>
+          </div>
+        </form>
+        <div class="nav-buttons">
+          <button type="button" class="btn btn-light" *ngIf="!isLoggedIn" routerLink="/register">Register</button>
+          <button type="button" class="btn btn-outline-success" *ngIf="!isLoggedIn" routerLink="/login">Login</button>
+          <button type="button" class="btn btn-outline-secondary" *ngIf="isLoggedIn" routerLink="/home">Profile</button>
+          <button *ngIf="isLoggedIn" type="button" class="btn btn-outline-secondary" (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </nav>
   </div>
 </header>
 
