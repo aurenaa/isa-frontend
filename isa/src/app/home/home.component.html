@@ -76,7 +76,7 @@
       </div>
 
       <div class="newest-row" #newestRow>
-        <div class="video-card newest" *ngFor="let v of newestVideos">
+        <div routerLink="/video" class="video-card newest" *ngFor="let v of newestVideos">
           <img src="https://picsum.photos/600/340">
           <div class="video-title">{{ v.title }}</div>
         </div>

@@ -11,7 +11,6 @@ export class LoginComponent {
   username = '';
   password = '';
   errorMessage = '';
-  loading = false;
 
   constructor(
     private authService: AuthService,
@@ -19,7 +18,6 @@ export class LoginComponent {
   ) {}
 
   onSubmit(): void {
-    this.loading = true;
     this.errorMessage = '';
     
     this.authService.login(this.username, this.password).subscribe({
@@ -28,7 +26,6 @@ export class LoginComponent {
       },
       error: (error) => {
         this.errorMessage = 'Invalid username or password';
-        this.loading = false;
       }
     });
   }

@@ -1,0 +1,23 @@
+.login-card {
+  max-width: 500px;
+  width: 100%;
+  border-radius: 15px;
+}
+
+.login-form {
+  padding-left: 45px;
+  padding-right: 45px;
+}
+
+.login-card .btn-primary {
+  background-color: #f43899;
+  border: none;
+  padding: 12px;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.login-card .btn-primary:hover {
+  background-color: #d12e81;
+}
