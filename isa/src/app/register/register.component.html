@@ -1,10 +1,6 @@
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
-  <div class="card shadow p-4" style="max-width: 500px; width: 100%;">
+  <div class="card shadow p-4 registration-form" style="max-width: 500px; width: 100%;">
       <h3 class="text-center mb-4">Register</h3>
-      
-      <div *ngIf="message" [class]="messageClass">
-        {{ message }}
-      </div>
       
       <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
 
@@ -92,16 +88,17 @@
             </div>
         </div>
 
-      <div class="row mb-3">
-          <label class="form-label">Address</label>
-          <input 
-            type="text" 
-            [(ngModel)]="userData.address" 
-            name="address" 
-            placeholder="Address (optional)">
-        </div>
-
-        <button class="btn btn-primary w-100" type="submit">
+      <div class="row mb-3 address-row">
+          <div class="col-12">
+            <label class="form-label">Address</label>
+            <input 
+              type="text" 
+              [(ngModel)]="userData.address" 
+              name="address" 
+              placeholder="Address (optional)">
+          </div>
+      </div>
+        <button class="btn btn-primary w-100 py-2" type="submit">
           Register
         </button>
       </form>
