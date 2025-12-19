@@ -7,19 +7,24 @@
                alt="Jutjubic" 
                class="logo-img">
         </a>
-        <form class="search-form">
-          <div class="search-wrapper">
-            <input
-              class="form-control search-input"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            >
-            <i class="bi bi-search search-icon"></i>
-          </div>
-        </form>
+        <div class="search-upload-container">
+          <form class="search-form">
+            <div class="search-wrapper">
+              <input
+                class="form-control search-input"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              >
+              <i class="bi bi-search search-icon"></i>
+            </div>
+          </form>
+          <button class="upload-button" routerLink="/upload">
+            <i *ngIf="isLoggedIn" class="bi bi-upload"></i>
+          </button>
+        </div>
         <div class="nav-buttons">
-          <button type="button" class="btn btn-light" *ngIf="!isLoggedIn" routerLink="/register">Register</button>
+          <button type="button" class="btn btn-light" *ngIf="!isLoggedIn" routerLink="/register">Sign up</button>
           <button type="button" class="btn btn-outline-success" *ngIf="!isLoggedIn" routerLink="/login">Login</button>
           <button type="button" class="btn btn-outline-secondary" *ngIf="isLoggedIn" routerLink="/home">Profile</button>
           <button *ngIf="isLoggedIn" type="button" class="btn btn-outline-secondary" (click)="logout()">Logout</button>
@@ -54,6 +59,41 @@
       </li>
     </ul>
   </nav>
+
+  <div class="content">
+    <section class="video-section">
+      <div class="section-header">
+        <h2>Newest videos</h2>
+
+        <div class="arrows">
+          <button (click)="scrollLeft()">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button (click)="scrollRight()">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="newest-row" #newestRow>
+        <div class="video-card newest" *ngFor="let v of newestVideos">
+          <img src="https://picsum.photos/600/340">
+          <div class="video-title">{{ v.title }}</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="video-section">
+      <h2>Browse</h2>
+
+      <div class="browse-grid">
+        <div class="video-card" *ngFor="let v of browseVideos">
+          <img src="https://picsum.photos/400/240">
+          <div class="video-title">{{ v.title }}</div>
+        </div>
+      </div>
+    </section>
+  </div>
 
   <main>
     <router-outlet></router-outlet>
