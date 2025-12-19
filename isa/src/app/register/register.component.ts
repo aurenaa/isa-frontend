@@ -22,6 +22,7 @@ export class RegisterComponent {
   message = '';
   messageClass = '';
   loading = false;
+  submitted = false;
 
   constructor(
     private authService: AuthService,
@@ -29,6 +30,7 @@ export class RegisterComponent {
   ) {}
 
   onSubmit(): void {
+    this.submitted = true;
     if (this.userData.password !== this.confirmPassword) {
       this.message = 'Passwords do not match!';
       this.messageClass = 'error';
