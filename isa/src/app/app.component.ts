@@ -10,18 +10,20 @@ import { filter } from 'rxjs';
 })
 export class AppComponent implements OnInit { 
 
-title = 'Explorer';
+  showNavbar = true;
+  title = 'Jutjubic';
+
   isHomePage = false;
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       this.isHomePage = event.urlAfterRedirects === '/home' || event.urlAfterRedirects === '/';
+      this.showNavbar = !event.urlAfterRedirects.includes('/login') && !event.urlAfterRedirects.includes('/register');
     });
   }
+
+  
 }

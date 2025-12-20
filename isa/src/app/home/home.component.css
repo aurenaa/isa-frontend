@@ -92,6 +92,16 @@
   border-radius: 12px;
 }
 
+.video-card.newest img,
+.browse-grid img {
+  transition: all 0.3s ease;
+}
+
+.video-card.newest:hover img,
+.browse-grid .video-card:hover img {
+  filter: brightness(0.85);
+}
+
 .video-card {
   cursor: pointer;
 }
