@@ -43,8 +43,8 @@ export class AuthService {
 
     return this.http.post(
       this.config.register_url, 
-      JSON.stringify(userData), 
-      { headers }
+      userData,
+      { responseType: 'text' }
     );
   }
 

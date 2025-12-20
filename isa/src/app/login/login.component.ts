@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../service/auth.service';
 
 @Component({
@@ -11,18 +11,24 @@ export class LoginComponent {
   username = '';
   password = '';
   errorMessage = '';
+  successMessage: string = '';
+  
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {}
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['registered'] === 'true') {
+        this.successMessage = 'Registration successful! Please check your email to activate your account before logging in.';
+      }
+    });
+  }
 
   onSubmit(): void {
     this.errorMessage = '';
-    
+
     this.authService.login(this.username, this.password).subscribe({
       next: () => {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
       },
       error: (error) => {
         this.errorMessage = 'Invalid username or password';

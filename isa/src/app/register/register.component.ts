@@ -19,8 +19,6 @@ export class RegisterComponent {
   };
   
   confirmPassword = '';
-  message = '';
-  messageClass = '';
   submitted = false;
 
   constructor(
@@ -32,26 +30,14 @@ export class RegisterComponent {
     this.submitted = true;
 
     if (registerForm.invalid || this.userData.password !== this.confirmPassword) {
-      this.message = 'Passwords do not match!';
-      this.messageClass = 'error';
       return;
     }
 
-    this.message = '';
-    this.messageClass = '';
-
     this.authService.register(this.userData).subscribe({
       next: () => {
-        this.message = 'Registration successful! Redirecting to login...';
-        this.messageClass = 'success';
-        
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-        }, 2000);
+        this.router.navigate(['/login'], { queryParams: { registered: 'true' } });
       },
       error: (error) => {
-        this.message = error.error || 'Registration failed. Please try again.';
-        this.messageClass = 'error';
       }
     });
   }

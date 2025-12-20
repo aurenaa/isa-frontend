@@ -7,6 +7,12 @@
   width: 400px;
 }
 
+.search-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;             
+}
+
 .search-wrapper {
   position: relative;
   width: 100%;
@@ -33,6 +39,22 @@
 }
 
 .upload-button {
-  border-color: transparent;
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.profile-btn {
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  padding: 0;
   background-color: transparent;
+  border: transparent;
+}
+
+.profile-btn i {
+  font-size: 30px; 
+  color: #333;
 }

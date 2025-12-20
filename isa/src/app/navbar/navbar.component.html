@@ -25,9 +25,11 @@
         </div>
         <div class="nav-buttons">
           <button class="btn btn-light" *ngIf="!isLoggedIn" (click)="goToSignUp()">Sign up</button>
-          <button class="btn btn-outline-success" (click)="goToLogin()">Login</button>
-          <button type="button" class="btn btn-outline-secondary" *ngIf="isLoggedIn" routerLink="/profile">Profile</button>
-          <button *ngIf="isLoggedIn" type="button" class="btn btn-outline-secondary" (click)="logout()">Logout</button>
+          <button class="btn btn-outline-success" *ngIf="!isLoggedIn" (click)="goToLogin()">Login</button>
+          <button type="button" class="profile-btn" *ngIf="isLoggedIn" routerLink="/profile">
+            <i class="bi bi-person-circle"></i>
+          </button>
+          <button *ngIf="isLoggedIn" type="button" class="btn btn-outline-danger" (click)="logout()">Logout</button>
         </div>
       </div>
     </nav>
