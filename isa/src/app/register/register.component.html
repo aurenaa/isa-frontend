@@ -2,7 +2,7 @@
   <div class="card shadow p-4 registration-form" style="max-width: 500px; width: 100%;">
       <h3 class="text-center mb-4">Register</h3>
       
-      <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+      <form (ngSubmit)="onSubmit(registerForm)" #registerForm="ngForm">
 
         <div class="row mb-3">
           <div class="col">
@@ -98,7 +98,7 @@
               placeholder="Address (optional)">
           </div>
       </div>
-        <button class="btn btn-primary w-100 py-2" type="submit">
+        <button class="btn btn-primary w-100 py-2" type="submit" [disabled]="registerForm.invalid || userData.password !== confirmPassword">
           Register
         </button>
       </form>

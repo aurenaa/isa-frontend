@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +13,6 @@ export class RegisterComponent {
     username: '',
     email: '',
     password: '',
-    confirmPassword: '',
     firstname: '',
     lastname: '',
     address: ''
@@ -21,7 +21,6 @@ export class RegisterComponent {
   confirmPassword = '';
   message = '';
   messageClass = '';
-  loading = false;
   submitted = false;
 
   constructor(
@@ -29,15 +28,15 @@ export class RegisterComponent {
     private router: Router
   ) {}
 
-  onSubmit(): void {
+  onSubmit(registerForm: NgForm): void {
     this.submitted = true;
-    if (this.userData.password !== this.confirmPassword) {
+
+    if (registerForm.invalid || this.userData.password !== this.confirmPassword) {
       this.message = 'Passwords do not match!';
       this.messageClass = 'error';
       return;
     }
 
-    this.loading = true;
     this.message = '';
     this.messageClass = '';
 
@@ -45,7 +44,6 @@ export class RegisterComponent {
       next: () => {
         this.message = 'Registration successful! Redirecting to login...';
         this.messageClass = 'success';
-        this.loading = false;
         
         setTimeout(() => {
           this.router.navigate(['/login']);
@@ -54,7 +52,6 @@ export class RegisterComponent {
       error: (error) => {
         this.message = error.error || 'Registration failed. Please try again.';
         this.messageClass = 'error';
-        this.loading = false;
       }
     });
   }
