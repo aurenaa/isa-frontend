@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ConfigService } from './config.service';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,8 @@ export class AuthService {
     private config: ConfigService,
     private router: Router
   ) {
-    this.checkLoginStatus();
+    const status = localStorage.getItem('isLoggedIn') === 'true';
+    this.loggedIn.next(status);
   }
 
   login(username: string, password: string): Observable<any> {
@@ -49,13 +50,16 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.post(this.config.logout_url, {}, { 
-      withCredentials: true 
-    }).pipe(
-      tap(() => {
+    return this.http.post(
+      this.config.logout_url, 
+      {}, 
+      { responseType: 'text' }
+    ).pipe(
+      finalize(() => {
         this.loggedIn.next(false);
         localStorage.removeItem('isLoggedIn');
-        this.router.navigate(['/login']);
+        localStorage.removeItem('jwt');
+        this.router.navigate(['/']);
       })
     );
   }
