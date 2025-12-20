@@ -1,1 +1,37 @@
-<p>navbar works!</p>
+<header>
+  <div class="header-content">
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" routerLink="/">
+          <img src="assets/logo_name.png" 
+               alt="Jutjubic" 
+               class="logo-img">
+        </a>
+        <div class="search-upload-container">
+          <form class="search-form">
+            <div class="search-wrapper">
+              <input
+                class="form-control search-input"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+              >
+              <i class="bi bi-search search-icon"></i>
+            </div>
+          </form>
+          <button class="upload-button" routerLink="/upload">
+            <i *ngIf="isLoggedIn" class="bi bi-upload"></i>
+          </button>
+        </div>
+        <div class="nav-buttons">
+          <button class="btn btn-light" *ngIf="!isLoggedIn" (click)="goToSignUp()">Sign up</button>
+          <button class="btn btn-outline-success" *ngIf="!isLoggedIn" (click)="goToLogin()">Login</button>
+          <button type="button" class="profile-btn" *ngIf="isLoggedIn" routerLink="/profile">
+            <i class="bi bi-person-circle"></i>
+          </button>
+          <button *ngIf="isLoggedIn" type="button" class="btn btn-outline-danger" (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
