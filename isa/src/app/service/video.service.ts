@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -21,6 +21,14 @@ export class VideoService {
         formData.append('video', videoFile);
         formData.append('thumbnail', thumbnailFile);
 
-        return this.http.post('${this._video_url}./upload', formData);
+        const token = localStorage.getItem('jwt');
+
+        return this.http.post(`${this._video_url}/upload`, formData, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        reportProgress: true,
+        observe: 'events'
+    });
     }
 }
