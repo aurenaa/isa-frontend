@@ -41,8 +41,12 @@
 .upload-button {
   border: none;
   background: transparent;
-  font-size: 22px;
+  font-size: 20px;
   cursor: pointer;
+}
+
+.upload-button i {
+  font-size: 1.1rem;
 }
 
 .profile-btn {

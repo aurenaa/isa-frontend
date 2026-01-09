@@ -1,0 +1,25 @@
+<div class="upload-container">
+    <h3>Creata Video Post</h3>
+    <form (ngSubmit)="onSubmit()" #uploadForm="ngForm">
+        <input type="text" [(ngModel)]="videoData.title" name="title" placeholder="Title" required>
+        <textarea [(ngModel)]="videoData.description" name="description" placeholder="Description"></textarea>
+        <input type="text" [(ngModel)]="tagInput" (keyup.enter)="addTag()" name="tagInput" placeholder="Add tags (press enter)">
+
+        <div class="tags-list">
+            <span *ngFor="let tag of videoData.tags" class="tag-badge">{{tag}}</span>
+        </div>
+
+        <input type="text" [(ngModel)]="videoData.location" name="location" placeholder="Location (optional)">
+
+        <div class="file-inputs">
+            <label>Video (MP4, max 200MB):</label>
+            <input type="file" (change)="onVideoSelected($event)" accept="video/mp4">
+            
+            <label>Thumbnail image:</label>
+            <input type="file" (change)="onThumbSelected($event)" accept="image/*">
+        </div>
+        <button type="submit" class="btn-upload" [disabled]="!selectedVideo || !selectedThumb">
+            Upload Video
+        </button>
+    </form>
+</div>
