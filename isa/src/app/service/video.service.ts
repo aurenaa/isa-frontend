@@ -11,6 +11,13 @@ export class VideoService {
 
     constructor(private http: HttpClient) {}
 
+    private getHeaders(): HttpHeaders {
+        const token = localStorage.getItem('jwt');
+        return new HttpHeaders({
+            'Authorization': `Bearer ${token}`
+        });
+    }
+
     uploadVideo(videoData: any, videoFile: File, thumbnailFile: File): Observable<any> {
         const formData = new FormData();
 
@@ -24,11 +31,24 @@ export class VideoService {
         const token = localStorage.getItem('jwt');
 
         return this.http.post(`${this._video_url}/upload`, formData, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-        reportProgress: true,
-        observe: 'events'
-    });
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            reportProgress: true,
+            observe: 'events'
+        });
+    }
+
+    getAllVideos(): Observable<any[]> {
+        return this.http.get<any[]>(this._video_url, { headers: this.getHeaders() });
+    }
+
+    getVideoById(id: number): Observable<any> {
+        const token = localStorage.getItem('jwt');
+        let headers = new HttpHeaders();
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        return this.http.get(`${this._video_url}/${id}`, { headers });
     }
 }

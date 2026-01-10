@@ -40,8 +40,8 @@
       </div>
 
       <div class="newest-row" #newestRow>
-        <div routerLink="/video" class="video-card newest" *ngFor="let v of newestVideos">
-          <img src="https://picsum.photos/600/340">
+        <div [routerLink]="['/video', v.id]" class="video-card newest" *ngFor="let v of newestVideos">
+          <img [src]="'http://localhost:8080/api/videos/' + v.id + '/thumbnail'">
           <div class="video-title">{{ v.title }}</div>
         </div>
       </div>
