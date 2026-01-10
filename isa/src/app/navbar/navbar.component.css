@@ -42,7 +42,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 16px; /* Blago smanjen padding da visina bude kao kod logout dugmeta */
+  padding: 6px 16px;
   font-size: 1.1rem;
   font-weight: 500;
   color: #333;
