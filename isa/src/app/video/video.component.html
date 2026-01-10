@@ -31,11 +31,16 @@
     </div>
 
     <div class="video-description bg-light p-3 rounded-3 mb-4">
-      <p class="fw-bold mb-1">
-        {{ video.location ? video.location + ' • ' : '' }} 
-        {{ video.createdAt | date:'longDate' }}
-      </p>
-      <p>
+      <div class="d-flex justify-content-between align-items-center fw-bold mb-1">
+        <span>
+          {{ video.location ? video.location + ' • ' : '' }} 
+          {{ video.createdAt | date:'longDate' }}
+        </span>
+        <span class="views-counter">
+          <i class="bi bi-eye-fill me-1"></i> {{ video.views }} pregleda
+        </span>
+      </div>
+      <p class="mt-2">
         {{ video.description }}
       </p>
       <div class="mt-2">
