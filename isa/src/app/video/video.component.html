@@ -1,4 +1,4 @@
-<div class="video-page-container">
+<div *ngIf="video; else loadingBlock" class="video-page-container">
   <div class="video-player-wrapper shadow-sm">
     <video controls autoplay class="main-video-display" style="width: 100%;">
       <source [src]="'http://localhost:8080/api/videos/' + video?.id + '/stream'" type="video/mp4">
@@ -12,7 +12,7 @@
       <div class="uploader-info d-flex align-items-center">
         <img src="https://picsum.photos/50/50?random=1" alt="User avatar" class="uploader-avatar rounded-circle me-3">
         <div>
-          <h5 class="m-0 fw-bold">User #{{ video.id }}</h5>
+          <h5 class="m-0 fw-bold">User</h5>
         </div>
         <button class="btn btn-dark btn-sm ms-4 rounded-pill px-3">Subscribe</button>
       </div>
@@ -52,3 +52,9 @@
   </div>
   
 </div>
+
+<ng-template #loadingBlock>
+  <div class="container text-center mt-5">
+    <h3>Loading...</h3>
+  </div>
+</ng-template>

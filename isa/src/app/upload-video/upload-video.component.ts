@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { VideoService } from '../service/video.service';
 import { Router } from '@angular/router';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-upload-video',
@@ -34,11 +35,15 @@ export class UploadVideoComponent {
     if (this.selectedVideo && this.selectedThumb) {
       this.videoService.uploadVideo(this.videoData, this.selectedVideo, this.selectedThumb)
         .subscribe({
-          next: () => {
-            alert('Video published! 🎥');
-            this.router.navigate(['/']);
+          next: (event: any) => {
+            if (event instanceof HttpResponse) {
+              alert('Video published! 🎥');
+              this.router.navigate(['/']);
+            }
           },
-          error: (err) => alert('Upload failed: ' + err.message)
+          error: (err) => {
+            alert('Upload failed: ' + err.message);
+          }
         });
     }
   }
