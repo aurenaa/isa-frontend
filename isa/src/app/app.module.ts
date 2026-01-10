@@ -10,6 +10,7 @@ import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './home/home.component';
 import { VideoComponent } from './video/video.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { UploadVideoComponent } from './upload-video/upload-video.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { NavbarComponent } from './navbar/navbar.component';
     HomeComponent,
     VideoComponent,
     NavbarComponent,
+    UploadVideoComponent,
   ],
   imports: [
     BrowserModule,
