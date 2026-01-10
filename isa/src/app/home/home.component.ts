@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
     
     this.videoService.getAllVideos().subscribe({
       next: (videos: any[]) => {
-        this.newestVideos = videos;
+        this.newestVideos = videos.slice(0, 5);;
         this.browseVideos = videos;
       },
       error: (err: any) => {

@@ -51,8 +51,8 @@
       <h2>Browse</h2>
 
       <div class="browse-grid">
-        <div class="video-card" *ngFor="let v of browseVideos">
-          <img src="https://picsum.photos/400/240">
+        <div [routerLink]="['/video', v.id]" class="video-card pointer-cursor" *ngFor="let v of browseVideos">
+          <img [src]="'http://localhost:8080/api/videos/' + v.id + '/thumbnail'">
           <div class="video-title">{{ v.title }}</div>
         </div>
       </div>

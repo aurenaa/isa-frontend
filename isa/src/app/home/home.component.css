@@ -104,6 +104,11 @@
 
 .video-card {
   cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.video-card:hover {
+  transform: scale(1.04);
 }
 
 .video-title {
