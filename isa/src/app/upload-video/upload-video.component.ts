@@ -37,7 +37,7 @@ export class UploadVideoComponent {
         .subscribe({
           next: (event: any) => {
             if (event instanceof HttpResponse) {
-              alert('Video published! 🎥');
+              alert('Video published!');
               this.router.navigate(['/']);
             }
           },

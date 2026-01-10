@@ -12,7 +12,8 @@
       <div class="uploader-info d-flex align-items-center">
         <img src="https://picsum.photos/50/50?random=1" alt="User avatar" class="uploader-avatar rounded-circle me-3">
         <div>
-          <h5 class="m-0 fw-bold">User</h5>
+          <h5 class="m-0 fw-bold">{{ video.user.firstName }} {{ video.user.lastName }}</h5>
+          <small class="text-muted">@{{ video.user.username }}</small>
         </div>
         <button class="btn btn-dark btn-sm ms-4 rounded-pill px-3">Subscribe</button>
       </div>
