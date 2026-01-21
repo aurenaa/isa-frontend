@@ -51,4 +51,13 @@ export class VideoService {
         }
         return this.http.get(`${this._video_url}/${id}`, { headers });
     }
+
+    incrementView(id: number): Observable<any> {
+        const token = localStorage.getItem('jwt');
+        let headers = new HttpHeaders();
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        return this.http.post(`${this._video_url}/${id}/view`, {}, { headers });
+    }
 }

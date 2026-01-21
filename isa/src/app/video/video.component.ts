@@ -18,11 +18,18 @@ export class VideoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.videoService.getVideoById(+id).subscribe(data => {
+      const videoId = +id;
+
+      this.videoService.getVideoById(videoId).subscribe(data => {
         if(!this.video) {
           this.video = data;
         }
       });
+
+      this.videoService.incrementView(videoId).subscribe({
+        error: (err) => console.error('Error recording view', err)
+      });
+
       this.socketSubscription = this.socketService.videoUpdate$.subscribe((updatedVideo: any) => {
         if (this.video && this.video.id === updatedVideo.id){
           this.video.views = updatedVideo.views;

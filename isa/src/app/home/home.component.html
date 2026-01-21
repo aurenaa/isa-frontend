@@ -26,21 +26,10 @@
 
   <div class="content">
     <section class="video-section">
-      <div class="section-header">
-        <h2>Newest videos</h2>
-
-        <div class="arrows">
-          <button (click)="scrollLeft()">
-            <i class="bi bi-chevron-left"></i>
-          </button>
-          <button (click)="scrollRight()">
-            <i class="bi bi-chevron-right"></i>
-          </button>
-        </div>
-      </div>
+      <h2>Top Popular Videos</h2>
 
       <div class="newest-row" #newestRow>
-        <div [routerLink]="['/video', v.id]" class="video-card newest" *ngFor="let v of newestVideos">
+        <div [routerLink]="['/video', v.id]" class="video-card newest" *ngFor="let v of popularVideos">
           <img [src]="'http://localhost:8080/api/videos/' + v.id + '/thumbnail'">
           <div class="video-title">{{ v.title }}</div>
         </div>
