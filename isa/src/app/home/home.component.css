@@ -4,7 +4,7 @@
 }
 
 .sidebar {
-  width: 350px;
+  width: 380px;
   background-color: #f8f9fa;
   border-right: 1px solid #dee2e6;
   padding-top: 20px;
@@ -50,34 +50,12 @@
   margin-bottom: 40px;
 }
 
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.section-header h2 {
-  font-size: 22px;
-  font-weight: 600;
-}
-
-.arrows button {
-  border: none;
-  background: #eee;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  margin-left: 8px;
-  cursor: pointer;
-}
-
 .newest-row {
   display: flex;      
   gap: 20px;       
   width: 100%;
   overflow-x: hidden;
-  scroll-behavior: smooth;
+  padding: 15px 15px;
 }
 
 .video-card.newest {
@@ -87,7 +65,7 @@
 
 .video-card.newest img {
   width: 100%;         
-  height: 250px;
+  height: 228px;
   object-fit: cover;
   border-radius: 12px;
 }
@@ -126,6 +104,6 @@
 
 .browse-grid img {
   width: 100%;
-  height: 180px;
+  height: 174px;
   object-fit: cover;
 }
