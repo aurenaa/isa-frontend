@@ -20,10 +20,8 @@ export class VideoComponent implements OnInit, OnDestroy {
     if (id) {
       const videoId = +id;
 
-      this.videoService.getVideoById(videoId).subscribe(data => {
-        if(!this.video) {
-          this.video = data;
-        }
+      this.videoService.getVideoDetails(videoId).subscribe(data => {
+        this.video = data;
       });
 
       this.videoService.incrementView(videoId).subscribe({
@@ -43,4 +41,47 @@ export class VideoComponent implements OnInit, OnDestroy {
       this.socketSubscription.unsubscribe();
     }
   }
+
+  onLike(): void {
+    if (!this.video) return;
+
+    this.videoService.toggleLike(this.video.id).subscribe({
+      next: () => {
+        if (!this.video.likedByCurrentUser && this.video.dislikedByCurrentUser) {
+          this.video.dislikedByCurrentUser = false;
+          this.video.dislikesCount = Math.max(0, this.video.dislikesCount - 1);
+        }
+        this.video.likedByCurrentUser = !this.video.likedByCurrentUser;
+        this.video.likesCount += this.video.likedByCurrentUser ? 1 : -1;
+      },
+      error: (err) => {
+        console.error('Error liking video', err);
+        if(err.status === 401) alert("You have to be logged in to like the video!");
+      }
+    });
+  }
+
+  onDislike(): void {
+    if (!this.video) return;
+
+    this.videoService.toggleDislike(this.video.id).subscribe({
+      next: () => {
+        if (this.video.likedByCurrentUser) {
+          this.video.likedByCurrentUser = false;
+          this.video.likesCount = Math.max(0, this.video.likesCount - 1);
+        }
+        this.video.dislikedByCurrentUser = !this.video.dislikedByCurrentUser;
+        if (this.video.dislikedByCurrentUser) {
+          this.video.dislikesCount = (this.video.dislikesCount || 0) + 1;
+        } else {
+          this.video.dislikesCount = Math.max(0, this.video.dislikesCount - 1);
+        }
+      },
+      error: (err) => {
+        console.error('Error disliking video', err);
+        if (err.status === 401) alert("You have to be logged in to dislike the video!");
+      }
+    });
+  }
+  
 }
