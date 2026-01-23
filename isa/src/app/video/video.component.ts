@@ -20,10 +20,8 @@ export class VideoComponent implements OnInit, OnDestroy {
     if (id) {
       const videoId = +id;
 
-      this.videoService.getVideoById(videoId).subscribe(data => {
-        if(!this.video) {
-          this.video = data;
-        }
+      this.videoService.getVideoDetails(videoId).subscribe(data => {
+        this.video = data;
       });
 
       this.videoService.incrementView(videoId).subscribe({
@@ -43,4 +41,24 @@ export class VideoComponent implements OnInit, OnDestroy {
       this.socketSubscription.unsubscribe();
     }
   }
+
+  onLike(): void {
+    if (!this.video) return;
+
+    this.videoService.toggleLike(this.video.id).subscribe({
+      next: () => {
+        this.video.likedByCurrentUser = !this.video.likedByCurrentUser;
+        if (this.video.likedByCurrentUser) {
+          this.video.likesCount++;
+        } else {
+          this.video.likesCount--;
+        }
+      },
+      error: (err) => {
+        console.error('Error liking video', err);
+        if(err.status === 401) alert("You have to be logged in to like the video!");
+      }
+    });
+  }
+
 }
