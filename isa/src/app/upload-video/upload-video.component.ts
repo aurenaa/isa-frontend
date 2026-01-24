@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { VideoService } from '../service/video.service';
 import { Router } from '@angular/router';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpClient } from '@angular/common/http';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+
 
 @Component({
   selector: 'app-upload-video',
@@ -9,12 +12,71 @@ import { HttpResponse } from '@angular/common/http';
   styleUrls: ['./upload-video.component.css']
 })
 export class UploadVideoComponent {
-  videoData = { title: '', description: '', tags: [] as string[], location: '' };
+  videoData = { 
+    title: '', 
+    description: '', 
+    tags: [] as string[], 
+    location: {
+      displayName: '',
+      latitude: 0,
+      longitude: 0,
+      city: '',
+      country: ''
+    }
+  };
+  
   tagInput = '';
   selectedVideo: File | null = null;
   selectedThumb: File | null = null;
 
-  constructor(private videoService: VideoService, private router: Router) {}
+  suggestions: any[] = [];
+  isSearching = false;
+  private searchSubject = new Subject<string>();
+
+  constructor(private videoService: VideoService, private router: Router, private http: HttpClient) {
+    this.searchSubject.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(term => {
+        if (term.length > 2) {
+          this.isSearching = true;
+          return this.fetchLocations(term);
+        } else {
+          this.isSearching = false;
+          this.suggestions = [];
+          return of([]);
+        }
+      })
+    ).subscribe({
+      next: (results) => {
+        this.suggestions = results;
+        this.isSearching = false;
+      },
+      error: () => {
+        this.isSearching = false;
+      }
+    });
+  }
+
+  fetchLocations(term: string) {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${term}&addressdetails=1&limit=5`;
+    return this.http.get<any[]>(url);
+  }
+
+  onLocationInput(event: any) {
+    this.searchSubject.next(event.target.value);
+  }
+
+  selectLocation(suggestion: any) {
+    this.videoData.location = {
+      displayName: suggestion.display_name,
+      latitude: parseFloat(suggestion.lat),
+      longitude: parseFloat(suggestion.lon),
+      city: suggestion.address.city || suggestion.address.town || suggestion.address.village || '',
+      country: suggestion.address.country || ''
+    };
+    this.suggestions = [];
+  }
 
   addTag() {
     if (this.tagInput.trim()) {
