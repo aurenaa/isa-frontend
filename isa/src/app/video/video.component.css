@@ -22,7 +22,7 @@
 }
 
 .video-main-title {
-    font-size: 20px;
+    font-size: 33px;
     font-weight: 700;
 }
 
@@ -94,4 +94,13 @@
 .comments-section h4 {
     font-size: 1.2rem;
     font-weight: 600;
+}
+
+.text-pink {
+    color: #f43899 !important;
+}
+
+.video-description span {
+    font-size: 0.95rem;
+    color: #444;
 }
