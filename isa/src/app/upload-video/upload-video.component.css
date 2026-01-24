@@ -135,3 +135,69 @@
   cursor: not-allowed;
   box-shadow: none;
 }
+
+.location-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.location-input {
+  width: 100%;
+  padding-right: 40px !important;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.suggestions-list li {
+  padding: 12px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  border-bottom: 1px solid #f5f5f5;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.suggestions-list li:hover {
+  background-color: #fff0f6;
+  color: #f43899;
+}
+
+.spinner {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #f43899;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { 
+    transform: rotate(0deg); 
+  }
+  100% { 
+    transform: rotate(360deg); 
+  }
+}

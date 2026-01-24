@@ -9,7 +9,23 @@
             <span *ngFor="let tag of videoData.tags" class="tag-badge">{{tag}}</span>
         </div>
 
-        <input type="text" [(ngModel)]="videoData.location" name="location" placeholder="Location (optional)">
+        <div class="location-wrapper">
+            <input type="text" 
+                   [(ngModel)]="videoData.location.displayName" 
+                   name="location" 
+                   placeholder="Search location (e.g. Belgrade)..."
+                   (input)="onLocationInput($event)"
+                   autocomplete="off"
+                   class="location-input">
+            
+            <div class="spinner" *ngIf="isSearching"></div>
+            
+            <ul class="suggestions-list" *ngIf="suggestions.length > 0">
+                <li *ngFor="let suggestion of suggestions" (click)="selectLocation(suggestion)">
+                    {{ suggestion.display_name }}
+                </li>
+            </ul>
+        </div>
 
         <div class="file-inputs">
             <label>Video (MP4, max 200MB):</label>
