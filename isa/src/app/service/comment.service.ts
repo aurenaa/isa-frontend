@@ -22,7 +22,7 @@ export class CommentService {
             .set('page', page.toString())
             .set('size', size.toString());
 
-        return this.http.get(`${this._url}/video/${videoId}`, { params });
+        return this.http.get(`${this._url}/video/${videoId}`, { params, headers: this.getHeaders() });
     }
 
     addComment(videoId: number, text: string): Observable<any> {
