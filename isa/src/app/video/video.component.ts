@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { VideoService } from '../service/video.service';
 import { SocketService } from '../service/socket.service';
 import { Subscription } from 'rxjs';
+import { CommentService } from '../service/comment.service';
 
 @Component({
   selector: 'app-video',
@@ -13,7 +14,12 @@ export class VideoComponent implements OnInit, OnDestroy {
   video: any;
   private socketSubscription: Subscription | undefined;
 
-  constructor( private route: ActivatedRoute, private videoService: VideoService, private socketService: SocketService) {}
+  constructor( 
+    private route: ActivatedRoute, 
+    private videoService: VideoService, 
+    private socketService: SocketService,
+    private CommentService: CommentService
+  ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
