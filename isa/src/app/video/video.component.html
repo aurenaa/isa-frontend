@@ -1,7 +1,23 @@
 <div *ngIf="video; else loadingBlock" class="video-page-container">
-  <div class="video-player-wrapper shadow-sm">
-    <video controls autoplay class="main-video-display">
-      <source [src]="'http://localhost:8080/api/videos/' + video?.id + '/stream'" type="video/mp4">
+  
+  <div class="video-player-wrapper shadow-sm bg-black" 
+       [class.is-live-premiere]="isWaiting || (video.scheduledTime && isPremiereActive())">
+    
+    <div *ngIf="isWaiting" class="premiere-overlay">
+        <h2 class="text-pink mb-3 premiere-title">LIVE PREMIERE IN</h2>
+        <div class="countdown-timer mb-2">
+          {{ countdownText }}
+        </div>
+        <p class="text-muted">Stay tuned! The video will start automatically.</p>
+    </div>
+
+    <video *ngIf="!isWaiting && videoStreamUrl" 
+           class="main-video-display"
+           controls 
+           autoplay 
+           muted 
+           preload="auto">
+      <source [src]="videoStreamUrl" type="video/mp4">
     </video>
   </div>
 

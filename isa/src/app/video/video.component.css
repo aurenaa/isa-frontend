@@ -148,3 +148,13 @@
     background-color: #ffffff;
     padding: 10px 0;
 }
+
+.is-live-premiere video::-webkit-media-controls-timeline,
+.is-live-premiere video::-webkit-media-controls-current-time-display,
+.is-live-premiere video::-webkit-media-controls-time-remaining-display {
+    display: none !important;
+}
+
+.is-live-premiere video::-moz-media-controls-timeline {
+    display: none !important;
+}
