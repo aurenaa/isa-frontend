@@ -104,3 +104,47 @@
     font-size: 0.95rem;
     color: #444;
 }
+
+.uploader-avatar-icon {
+    font-size: 50px;
+    color: #6c757d; 
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+.comment-avatar-icon {
+    font-size: 40px;
+    color: #6c757d;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+.comments-section .btn-dark {
+    background-color: #ff1493 !important;
+    border-color: #ff1493 !important;
+    font-weight: 500;
+    border-radius: 20px;
+    padding: 5px 20px;
+}
+
+.comments-section .btn-dark:hover {
+    background-color: #c71585 !important;
+}
+
+.btn-outline-secondary.rounded-pill {
+    color: #ff1493;
+    border-color: #ff1493;
+}
+
+.btn-outline-secondary.rounded-pill:hover {
+    background-color: #ff1493;
+    color: white;
+}
+
+.add-comment {
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 0;
+}
