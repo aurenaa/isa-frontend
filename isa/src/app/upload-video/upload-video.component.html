@@ -27,6 +27,23 @@
             </ul>
         </div>
 
+        <div class="scheduling-section my-3 p-3 border rounded bg-light">
+            <div class="form-check mb-2">
+                <input type="checkbox" class="form-check-input" id="isScheduled" [(ngModel)]="isScheduled" name="isScheduled">
+                <label class="form-check-label" for="isScheduled">Schedule as Live Premiere</label>
+            </div>
+
+            <div *ngIf="isScheduled" class="mt-2">
+                <label class="form-label">Start Date & Time:</label>
+                <input type="datetime-local" 
+                       [(ngModel)]="videoData.scheduledTime" 
+                       name="scheduledTime" 
+                       class="form-control"
+                       [required]="isScheduled">
+                <small class="text-muted">The video will sync for all viewers starting from this moment.</small>
+            </div>
+        </div>
+
         <div class="file-inputs">
             <label>Video (MP4, max 200MB):</label>
             <input type="file" (change)="onVideoSelected($event)" accept="video/mp4">
