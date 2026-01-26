@@ -1,9 +1,8 @@
-import { RouterTestingModule } from '@angular/router/testing';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { VideoService } from '../service/video.service';
 import { SocketService } from '../service/socket.service';
-import { Subscription } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { CommentService } from '../service/comment.service';
 
 @Component({
@@ -14,6 +13,7 @@ import { CommentService } from '../service/comment.service';
 export class VideoComponent implements OnInit, OnDestroy {
   video: any;
   private socketSubscription: Subscription | undefined;
+  private timerSubscription: Subscription | undefined;
 
   comments: any[] = [];
   newCommentText: string = '';
@@ -23,11 +23,17 @@ export class VideoComponent implements OnInit, OnDestroy {
   totalComments: number = 0;
   isLastPage: boolean = false;
 
+  videoStreamUrl: string | null = null;
+  isWaiting: boolean = false; 
+  countdownText: string = '00:00:00';
+  private viewRecorded = false;
+
   constructor( 
     private route: ActivatedRoute, 
     private videoService: VideoService, 
     private socketService: SocketService,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -38,24 +44,21 @@ export class VideoComponent implements OnInit, OnDestroy {
       this.videoService.getVideoDetails(videoId).subscribe(data => {
         this.video = data;
         this.loadComments(videoId);
-      });
-
-      this.videoService.incrementView(videoId).subscribe({
-        error: (err) => console.error('Error recording view', err)
+        this.runLogic();
       });
 
       this.socketSubscription = this.socketService.videoUpdate$.subscribe((updatedVideo: any) => {
         if (this.video && this.video.id === updatedVideo.id){
           this.video.views = updatedVideo.views;
+          this.cdr.detectChanges();
         }
       });
     }
   }
 
   ngOnDestroy(): void {
-    if (this.socketSubscription) {
-      this.socketSubscription.unsubscribe();
-    }
+    if (this.socketSubscription) this.socketSubscription.unsubscribe();
+    if (this.timerSubscription) this.timerSubscription.unsubscribe();
   }
 
   onLike(): void {
@@ -133,5 +136,88 @@ export class VideoComponent implements OnInit, OnDestroy {
       this.loadComments(this.video.id, true);
     }
   }
-  
+
+  runLogic(): void {
+    if (this.video.scheduledTime) {
+      const targetTime = new Date(this.video.scheduledTime).getTime();
+      if (targetTime > Date.now()) {
+        this.isWaiting = true;
+        this.videoStreamUrl = null;
+        this.cdr.detectChanges();
+        this.timerSubscription = interval(1000).subscribe(() => {
+          const diff = targetTime - Date.now();
+          if (diff <= 0) {
+            this.timerSubscription?.unsubscribe();
+            setTimeout(() => this.showVideo(), 2000);
+          } else {
+            this.updateClock(diff);
+          }
+          this.cdr.detectChanges();
+        });
+        return;
+      }
+    }
+    this.showVideo();
+  }
+
+  showVideo(): void {
+    this.isWaiting = false;
+    const ts = new Date().getTime();
+    this.videoStreamUrl = `http://localhost:8080/api/videos/${this.video.id}/stream?v=${ts}`;
+    
+    if (!this.viewRecorded) {
+      this.videoService.incrementView(this.video.id).subscribe({
+        next: () => this.viewRecorded = true,
+        error: (err) => console.error(err)
+      });
+    }
+
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      const v = document.querySelector('video') as HTMLVideoElement;
+      if (v) {
+        if (this.video.scheduledTime) {
+          const startTime = new Date(this.video.scheduledTime).getTime();
+          const diffInSeconds = Math.floor((Date.now() - startTime) / 1000);
+          if (diffInSeconds > 0 && diffInSeconds < (this.video.durationSeconds || 0)) {
+            v.currentTime = diffInSeconds;
+            this.preventSeek();
+          }
+        }
+        v.muted = true;
+        v.play().catch(err => console.warn("Autoplay blocked"));
+      }
+    }, 600);
+  }
+
+  preventSeek(): void {
+    const v = document.querySelector('video') as HTMLVideoElement;
+    if (!v || !this.video.scheduledTime) return;
+    const startTime = new Date(this.video.scheduledTime).getTime();
+    const durationMs = (this.video.durationSeconds || 0) * 1000;
+    v.ontimeupdate = () => {
+      const now = Date.now();
+      const diffInSeconds = Math.floor((now - startTime) / 1000);
+      if (now < (startTime + durationMs)) {
+        if (Math.abs(v.currentTime - diffInSeconds) > 2) v.currentTime = diffInSeconds;
+      } else {
+        v.ontimeupdate = null;
+      }
+    };
+  }
+
+  updateClock(diff: number): void {
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    this.countdownText = `${h < 10 ? '0'+h : h}:${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+  }
+
+  isPremiereActive(): boolean {
+    if (!this.video || !this.video.scheduledTime || !this.video.durationSeconds) {
+      return false;
+    }
+    const end = new Date(this.video.scheduledTime).getTime() + (this.video.durationSeconds * 1000);
+    return Date.now() < end;
+  }
 }

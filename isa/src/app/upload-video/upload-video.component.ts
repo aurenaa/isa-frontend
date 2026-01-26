@@ -12,10 +12,12 @@ import { Subject, of } from 'rxjs';
   styleUrls: ['./upload-video.component.css']
 })
 export class UploadVideoComponent {
+  isScheduled = false;
   videoData = { 
     title: '', 
     description: '', 
-    tags: [] as string[], 
+    tags: [] as string[],
+    scheduledTime: null as string | null,
     location: {
       displayName: '',
       latitude: 0,
@@ -94,6 +96,10 @@ export class UploadVideoComponent {
   }
 
   onSubmit() {
+    if(!this.isScheduled) {
+      this.videoData.scheduledTime = null;
+    }
+    
     if (this.selectedVideo && this.selectedThumb) {
       this.videoService.uploadVideo(this.videoData, this.selectedVideo, this.selectedThumb)
         .subscribe({
