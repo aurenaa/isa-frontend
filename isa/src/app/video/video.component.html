@@ -4,11 +4,27 @@
        [class.is-live-premiere]="isWaiting || (video.scheduledTime && isPremiereActive())">
     
     <div *ngIf="isWaiting" class="premiere-overlay">
-        <h2 class="text-pink mb-3 premiere-title">LIVE PREMIERE IN</h2>
-        <div class="countdown-timer mb-2">
-          {{ countdownText }}
+      <div class="premiere-content">
+        <div class="premiere-info">
+          <span class="premiere-badge">LIVE PREMIERE</span>
+            <div class="scheduled-for">
+              <i class="bi bi-calendar3 me-2"></i>
+                {{ video.scheduledTime | date:'EEEE, MMMM d' }}
+            </div>
+            <div class="scheduled-time">
+              <i class="bi bi-clock me-2"></i>
+                {{ video.scheduledTime | date:'HH:mm' }}
+            </div>
         </div>
-        <p class="text-muted">Stay tuned! The video will start automatically.</p>
+        <div class="premiere-divider"></div>
+        <div class="premiere-countdown">
+          <small class="starts-in">STARTS IN</small>
+            <div class="countdown-timer-compact">
+              {{ countdownText }}
+            </div>
+            <p class="wait-text">Stay tuned!</p>
+        </div>
+      </div>
     </div>
 
     <video *ngIf="!isWaiting && videoStreamUrl" 
