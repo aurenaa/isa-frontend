@@ -201,3 +201,100 @@
     transform: rotate(360deg); 
   }
 }
+
+.scheduling-section {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 2px dashed #dee2e6; 
+  border-radius: 8px;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: border-color 0.3s ease;
+}
+
+.scheduling-section:has(.form-check-input:checked) {
+  border-color: #f43899;
+}
+
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-check-input {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid #dee2e6;
+  border-radius: 4px;
+  background-color: #fff;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.form-check-input:checked {
+  background-color: #f43899;
+  border-color: #f43899;
+}
+
+.form-check-input:checked::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.form-check-label {
+  font-weight: 500;
+  color: #212529;
+  cursor: pointer;
+  user-select: none;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: #f43899;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  margin-top: 15px;
+  margin-bottom: 8px;
+}
+
+.form-control[type="datetime-local"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: #fff;
+  outline: none !important;
+  font-family: inherit;
+}
+
+.form-control[type="datetime-local"]:focus {
+  border-color: #f43899;
+  box-shadow: 0 0 0 0.2rem rgba(244, 56, 153, 0.15) !important;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(34%) sepia(85%) saturate(2256%) hue-rotate(307deg) brightness(97%) contrast(92%);
+}
+
+.text-muted {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-style: italic;
+}
