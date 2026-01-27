@@ -85,7 +85,6 @@ export class VideoComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Error liking video', err);
-        if(err.status === 401) alert("You have to be logged in to like the video!");
       }
     });
   }
@@ -108,7 +107,6 @@ export class VideoComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Error disliking video', err);
-        if (err.status === 401) alert("You have to be logged in to dislike the video!");
       }
     });
   }

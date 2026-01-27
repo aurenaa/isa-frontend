@@ -75,10 +75,12 @@
       </div>
 
       <div class="video-actions d-flex gap-2 mt-2 mt-md-0">
-        <div class="btn-group" role="group">
+        <div class="btn-group" role="group" [attr.data-title]="!isLoggedIn() ? 'You must be logged in to like or dislike' : null">
           <button type="button" 
                   class="btn btn-outline-secondary px-3 btn-action-left"
                   [class.active-pink]="video.likedByCurrentUser"
+                  [disabled]="!isLoggedIn()"
+                  [title]="!isLoggedIn() ? 'none' : 'auto'"
                   (click)="onLike()">
             <i class="bi" [ngClass]="video.likedByCurrentUser ? 'bi-hand-thumbs-up-fill' : 'bi-hand-thumbs-up'"></i> 
             <span class="ms-2">{{ video.likesCount || 0 }}</span>
@@ -87,6 +89,8 @@
           <button type="button" 
                   class="btn btn-outline-secondary px-3 btn-action-right"
                   [class.active-pink]="video.dislikedByCurrentUser"
+                  [disabled]="!isLoggedIn()"
+                  [title]="!isLoggedIn() ? 'none' : 'auto'"
                   (click)="onDislike()">
             <i class="bi" [ngClass]="video.dislikedByCurrentUser ? 'bi-hand-thumbs-down-fill' : 'bi-hand-thumbs-down'"></i>
             <span class="ms-2">{{ video.dislikesCount || 0 }}</span>
