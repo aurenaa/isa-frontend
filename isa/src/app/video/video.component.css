@@ -214,11 +214,11 @@
 
 .video-main-content {
     display: flex;
-    flex-direction: row;
-    gap: 15px; 
-    align-items: flex-start;
     justify-content: center;
+    align-items: flex-start;
     width: 100%;
+    position: relative;
+    margin-bottom: 20px;
 }
 
 .video-player-wrapper {
@@ -228,11 +228,11 @@
     overflow: hidden;
     background-color: #000;
     aspect-ratio: 16 / 9;
-    position: relative;
 }
 
 .live-chat-sidebar {
-    flex: 0 0 350px;
+    position: absolute;
+    left: calc(50% + 515px);
     width: 350px;
     height: 562.5px;
     border: none;
@@ -277,6 +277,16 @@
     color: white; 
 }
 
+@media (max-width: 1750px) {
+    .live-chat-sidebar {
+        position: static;
+        margin-left: 15px;
+    }
+    .video-main-content {
+        justify-content: center;
+    }
+}
+
 @media (max-width: 1400px) {
     .video-main-content {
         flex-direction: column;
@@ -286,6 +296,10 @@
         width: 100%;
         max-width: 1000px;
         flex: none;
+    }
+    .live-chat-sidebar {
+        height: 400px;
+        margin-top: 15px;
     }
 }
 
