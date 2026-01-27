@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { map, Subject } from "rxjs";
+import { Subject } from "rxjs";
 import * as SockJS from "sockjs-client";
-import { Client, Message } from '@stomp/stompjs'
+import { Client } from '@stomp/stompjs'
 
 @Injectable({
     providedIn: 'root'
@@ -10,6 +10,7 @@ import { Client, Message } from '@stomp/stompjs'
 export class SocketService {
     private baseUrl: string = "http://localhost:8080/";
     public videoUpdate$ = new Subject<any>();
+    public chatMessage$ = new Subject<any>();
     private stompClient: Client | undefined;
 
     constructor(private http: HttpClient){
@@ -18,7 +19,6 @@ export class SocketService {
 
     initializeWebSocketConnection() {
         const socketUrl = this.baseUrl + "socket";
-        
         this.stompClient = new Client({
             webSocketFactory: () => new SockJS(socketUrl),
             debug: (str) => {},
@@ -34,7 +34,30 @@ export class SocketService {
                 }
             });
         };
-
         this.stompClient.activate();
+    }
+
+    subscribeToChat(videoId: number) {
+        if (this.stompClient && this.stompClient.connected) {
+            return this.stompClient.subscribe(`/socket-publisher/video/${videoId}`, (message) => {
+                if (message.body) {
+                    this.chatMessage$.next(JSON.parse(message.body));
+                }
+            });
+        }
+        return null;
+    }
+
+    sendChatMessage(chatMsg: any) {
+        if (this.stompClient && this.stompClient.connected) {
+            this.stompClient.publish({
+                destination: `/socket-subscriber/send-message/${chatMsg.videoId}`,
+                body: JSON.stringify(chatMsg)
+            });
+        }
+    }
+
+    isConnected(): boolean {
+        return this.stompClient ? this.stompClient.connected : false;
     }
 }

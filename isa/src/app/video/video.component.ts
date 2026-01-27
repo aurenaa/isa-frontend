@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { VideoService } from '../service/video.service';
 import { SocketService } from '../service/socket.service';
@@ -11,6 +11,8 @@ import { CommentService } from '../service/comment.service';
   styleUrls: ['./video.component.css']
 })
 export class VideoComponent implements OnInit, OnDestroy {
+  @ViewChild('chatScroll') private chatScrollContainer!: ElementRef;
+
   video: any;
   private socketSubscription: Subscription | undefined;
   private timerSubscription: Subscription | undefined;
@@ -27,6 +29,11 @@ export class VideoComponent implements OnInit, OnDestroy {
   isWaiting: boolean = false; 
   countdownText: string = '00:00:00';
   private viewRecorded = false;
+
+  chatMessages: any[] = [];
+  newMessageTextChat: string = '';
+  private chatSubscription: Subscription | undefined;
+  private stompSubscription: any;
 
   constructor( 
     private route: ActivatedRoute, 
@@ -45,6 +52,7 @@ export class VideoComponent implements OnInit, OnDestroy {
         this.video = data;
         this.loadComments(videoId);
         this.runLogic();
+        this.initChat();
       });
 
       this.socketSubscription = this.socketService.videoUpdate$.subscribe((updatedVideo: any) => {
@@ -59,6 +67,8 @@ export class VideoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.socketSubscription) this.socketSubscription.unsubscribe();
     if (this.timerSubscription) this.timerSubscription.unsubscribe();
+    if (this.chatSubscription) this.chatSubscription.unsubscribe();
+    if (this.stompSubscription) this.stompSubscription.unsubscribe();
   }
 
   onLike(): void {
@@ -75,7 +85,6 @@ export class VideoComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Error liking video', err);
-        if(err.status === 401) alert("You have to be logged in to like the video!");
       }
     });
   }
@@ -98,7 +107,6 @@ export class VideoComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Error disliking video', err);
-        if (err.status === 401) alert("You have to be logged in to dislike the video!");
       }
     });
   }
@@ -219,5 +227,52 @@ export class VideoComponent implements OnInit, OnDestroy {
     }
     const end = new Date(this.video.scheduledTime).getTime() + (this.video.durationSeconds * 1000);
     return Date.now() < end;
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('jwt');
+  }
+
+  initChat(): void {
+    if (!this.isWaiting && !this.isPremiereActive()) return;
+    if (!this.socketService.isConnected()) {
+      setTimeout(() => this.initChat(), 500);
+      return;
+    }
+    this.stompSubscription = this.socketService.subscribeToChat(this.video.id);
+    this.chatSubscription = this.socketService.chatMessage$.subscribe((msg: any) => {
+      if (this.video && msg.videoId === this.video.id) {
+        this.chatMessages = [...this.chatMessages, msg];
+        this.cdr.detectChanges();
+        this.scrollToBottom();
+      }
+    });
+  }
+
+  sendChat(): void {
+    if (this.newMessageTextChat.trim() && this.video && this.isLoggedIn()) {
+      const token = localStorage.getItem('jwt');
+      let payload = { sub: '', firstName: '', lastName: '' };
+      try {
+        if (token) payload = JSON.parse(atob(token.split('.')[1]));
+      } catch (e) {}
+      const chatMsg = {
+        authorUsername: payload.sub,
+        firstName: (payload as any).firstName || '',
+        lastName: (payload as any).lastName || '',
+        text: this.newMessageTextChat,
+        videoId: this.video.id
+      };
+      this.socketService.sendChatMessage(chatMsg);
+      this.newMessageTextChat = '';
+    }
+  }
+
+  private scrollToBottom(): void {
+    setTimeout(() => {
+      if (this.chatScrollContainer) {
+        this.chatScrollContainer.nativeElement.scrollTop = this.chatScrollContainer.nativeElement.scrollHeight;
+      }
+    }, 100);
   }
 }

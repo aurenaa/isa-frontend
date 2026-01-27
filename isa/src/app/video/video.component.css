@@ -210,3 +210,133 @@
 .is-live-premiere video::-webkit-media-controls-current-time-display {
     display: none !important;
 }
+
+
+.video-main-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.video-player-wrapper {
+    flex: 0 0 1000px; 
+    width: 1000px;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: #000;
+    aspect-ratio: 16 / 9;
+}
+
+.live-chat-sidebar {
+    position: absolute;
+    left: calc(50% + 515px);
+    width: 350px;
+    height: 562.5px;
+    border: none;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #f8f9fa;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+.video-details, .comments-section {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.chat-header {
+    background-color: #f43899;
+    letter-spacing: 1px;
+    font-weight: 800;
+}
+
+.chat-messages-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    background: #fdfdfd;
+}
+
+.border-pink { 
+    border-color: #f43899 !important; 
+}
+
+.btn-pink-chat { 
+    background-color: #f43899; 
+    color: white; 
+    border: none; 
+}
+
+.btn-pink-chat:hover { 
+    background-color: #d12e81; 
+    color: white; 
+}
+
+@media (max-width: 1750px) {
+    .live-chat-sidebar {
+        position: static;
+        margin-left: 15px;
+    }
+    .video-main-content {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 1400px) {
+    .video-main-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    .video-player-wrapper, .live-chat-sidebar {
+        width: 100%;
+        max-width: 1000px;
+        flex: none;
+    }
+    .live-chat-sidebar {
+        height: 400px;
+        margin-top: 15px;
+    }
+}
+
+.btn-group[data-title] {
+    position: relative;
+}
+
+.btn-group[data-title]:hover::before {
+    content: attr(data-title);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff; 
+    color: #757575;
+    border: 1px solid #919090;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    pointer-events: none;
+}
+
+.btn-group[data-title]:hover::after {
+    content: "";
+    position: absolute;
+    bottom: 97%;
+    left: 50%;
+    transform: translateX(-48%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #919090 transparent transparent transparent;
+    z-index: 1000;
+}
+
+.btn-group button:disabled {
+    pointer-events: none;
+}
