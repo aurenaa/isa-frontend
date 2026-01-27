@@ -28,11 +28,13 @@ export class HomeComponent implements OnInit {
         this.browseVideos = videos;
       },
       error: (err: any) => {
-        console.error('Greška pri učitavanju videa:', err);
+        console.error('Error when loading videos:', err);
       }
     });
 
-    this.popularVideoService.getLatest().subscribe({
+    const detectedCountry = 'Serbia';
+
+    this.popularVideoService.getLatest(detectedCountry).subscribe({
       next: (data: any) => {
         if (data) {
           if (data.firstVideoId) this.loadSinglePopularVideo(data.firstVideoId);
