@@ -1,40 +1,64 @@
 <div *ngIf="video; else loadingBlock" class="video-page-container">
   
-  <div class="video-player-wrapper shadow-sm bg-black" 
-       [class.is-live-premiere]="isWaiting || (video.scheduledTime && isPremiereActive())">
-    
-    <div *ngIf="isWaiting" class="premiere-overlay">
-      <div class="premiere-content">
-        <div class="premiere-info">
-          <span class="premiere-badge">LIVE PREMIERE</span>
-            <div class="scheduled-for">
-              <i class="bi bi-calendar3 me-2"></i>
-                {{ video.scheduledTime | date:'EEEE, MMMM d' }}
-            </div>
-            <div class="scheduled-time">
-              <i class="bi bi-clock me-2"></i>
-                {{ video.scheduledTime | date:'HH:mm' }}
-            </div>
-        </div>
-        <div class="premiere-divider"></div>
-        <div class="premiere-countdown">
-          <small class="starts-in">STARTS IN</small>
-            <div class="countdown-timer-compact">
-              {{ countdownText }}
-            </div>
-            <p class="wait-text">Stay tuned!</p>
+  <div class="video-main-content">
+    <div class="video-player-wrapper shadow-sm bg-black" 
+          [class.is-live-premiere]="isWaiting || (video.scheduledTime && isPremiereActive())">
+      
+      <div *ngIf="isWaiting" class="premiere-overlay">
+        <div class="premiere-content">
+          <div class="premiere-info">
+            <span class="premiere-badge">LIVE PREMIERE</span>
+              <div class="scheduled-for">
+                <i class="bi bi-calendar3 me-2"></i>
+                  {{ video.scheduledTime | date:'EEEE, MMMM d' }}
+              </div>
+              <div class="scheduled-time">
+                <i class="bi bi-clock me-2"></i>
+                  {{ video.scheduledTime | date:'HH:mm' }}
+              </div>
+          </div>
+          <div class="premiere-divider"></div>
+          <div class="premiere-countdown">
+            <small class="starts-in">STARTS IN</small>
+              <div class="countdown-timer-compact">
+                {{ countdownText }}
+              </div>
+              <p class="wait-text">Stay tuned!</p>
+          </div>
         </div>
       </div>
+
+      <video *ngIf="!isWaiting && videoStreamUrl" 
+              class="main-video-display"
+              controls 
+              autoplay 
+              muted 
+              preload="auto">
+        <source [src]="videoStreamUrl" type="video/mp4">
+      </video>
     </div>
 
-    <video *ngIf="!isWaiting && videoStreamUrl" 
-           class="main-video-display"
-           controls 
-           autoplay 
-           muted 
-           preload="auto">
-      <source [src]="videoStreamUrl" type="video/mp4">
-    </video>
+    <div *ngIf="isWaiting || (video.scheduledTime && isPremiereActive())" class="live-chat-sidebar card shadow-sm">
+      <div class="chat-header text-white py-2 px-3 fw-bold small text-center">LIVE CHAT</div>
+      <div class="chat-messages-container p-3" #chatScroll>
+        <div *ngFor="let m of chatMessages" class="chat-msg mb-3">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-person-circle small text-secondary"></i>
+            <small class="fw-bold text-pink">@{{ m.authorUsername }}</small>
+          </div>
+          <div class="small p-2 bg-white rounded shadow-sm border-start border-pink border-3">{{ m.text }}</div>
+        </div>
+      </div>
+      <div class="chat-footer p-2 border-top bg-light">
+        <div *ngIf="isLoggedIn(); else noChat" class="input-group input-group-sm">
+          <input type="text" class="form-control shadow-none" [(ngModel)]="newMessageTextChat" (keyup.enter)="sendChat()" placeholder="Say something...">
+          <button class="btn btn-pink-chat" (click)="sendChat()"><i class="bi bi-send"></i></button>
+        </div>
+        <ng-template #noChat>
+          <div class="text-center py-1"><small class="text-muted italic">Login to chat</small></div>
+        </ng-template>
+      </div>
+    </div>
   </div>
 
   <div class="video-details mt-3">
@@ -95,7 +119,7 @@
   <div class="comments-section">
     <h4 class="mb-4">Comments ({{ totalComments }})</h4>
     
-    <div class="add-comment d-flex gap-3 mb-4">
+    <div *ngIf="isLoggedIn(); else noComment" class="add-comment d-flex gap-3 mb-4">
       <i class="bi bi-person-circle comment-avatar-icon"></i>
       <div class="input-group">
         <input type="text" 
@@ -106,6 +130,11 @@
         <button class="btn btn-dark" (click)="submitComment()">Post</button>
       </div>
     </div>
+    <ng-template #noComment>
+      <div class="p-3 mb-4 bg-light rounded-3 text-center border">
+        <span class="text-muted italic">You must be logged in to post a comment.</span>
+      </div>
+    </ng-template>
 
     <div *ngFor="let c of comments" class="comment-item d-flex gap-3 mb-3 border-bottom pb-2">
       <i class="bi bi-person-circle comment-avatar-icon"></i>
