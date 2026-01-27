@@ -18,7 +18,8 @@ export class PopularVideoService {
         });
     }
 
-    getLatest(): Observable<any[]> {
-        return this.http.get<any>(this._video_url + "/latest", { headers: this.getHeaders() });
+    getLatest(country: string = 'Serbia'): Observable<any> {
+        const urlWithParam = `${this._video_url}/latest?country=${country}`;
+        return this.http.get<any>(urlWithParam, { headers: this.getHeaders() });
     }
 }
