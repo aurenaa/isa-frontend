@@ -87,4 +87,8 @@ export class VideoService {
         }
         return this.http.post(`${this._video_url}/${id}/dislike`, {}, { headers });
     }
+
+    getTrendingNearby(lat: number, lon: number, radius: number = 50): Observable<any[]> {
+        return this.http.get<any[]>(`${this._video_url}/trending-nearby?lat=${lat}&lon=${lon}&radius=${radius}`, { headers: this.getHeaders() });
+    }
 }
