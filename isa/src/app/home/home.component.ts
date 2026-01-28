@@ -23,6 +23,8 @@ export class HomeComponent implements OnInit {
         this.isLoggedIn = loggedIn;
         if (this.isLoggedIn) {
           this.getNearbyVideos();
+        } else {
+          this.nearbyVideos = [];
         }
       });
     
