@@ -12,16 +12,21 @@ import { PopularVideoService } from '../service/popular-video.service';
 export class HomeComponent implements OnInit { 
 
   isLoggedIn = false;
-
   popularVideos: any[] = [];
   browseVideos: any[] = [];
+  nearbyVideos: any[] = [];
 
   constructor(private authService: AuthService, private videoService: VideoService, private popularVideoService: PopularVideoService , private router: Router) {}
 
   ngOnInit(): void {
-    this.authService.isLoggedIn().subscribe(
-      loggedIn => this.isLoggedIn = loggedIn
-    );
+    this.authService.isLoggedIn().subscribe(loggedIn => {
+        this.isLoggedIn = loggedIn;
+        if (this.isLoggedIn) {
+          this.getNearbyVideos();
+        } else {
+          this.nearbyVideos = [];
+        }
+      });
     
     this.videoService.getAllVideos().subscribe({
       next: (videos: any[]) => {
@@ -32,9 +37,7 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    const detectedCountry = 'Serbia';
-
-    this.popularVideoService.getLatest(detectedCountry).subscribe({
+    this.popularVideoService.getLatest().subscribe({
       next: (data: any) => {
         if (data) {
           if (data.firstVideoId) this.loadSinglePopularVideo(data.firstVideoId);
@@ -103,5 +106,27 @@ export class HomeComponent implements OnInit {
         console.error("Server Response: Error processing location data.", err);
       }
     });
+  }
+  private getNearbyVideos() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          this.videoService.getTrendingNearby(pos.coords.latitude, pos.coords.longitude).subscribe({
+            next: (videos) => {
+              this.nearbyVideos = videos;
+            },
+            error: (err) => console.error('Error fetching nearby videos:', err)
+          });
+        },
+        (err) => {
+          /* this.http.get<any>('http://ip-api.com/json').subscribe(res => {
+            this.videoService.getTrendingNearby(res.lat, res.lon).subscribe(
+              videos => this.nearbyVideos = videos
+            );
+          });
+          */
+        }
+      );
+    }
   }
 }
