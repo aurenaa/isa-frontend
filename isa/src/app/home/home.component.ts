@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit {
       },
       error: (err) => console.error('Error getting trending videos:', err)
     });
+    this.requestAndResolveLocation();
   }
 
   private loadSinglePopularVideo(id: number) {
@@ -72,5 +73,35 @@ export class HomeComponent implements OnInit {
 
   goToSignUp(): void {
     this.router.navigate(['/register']);
+  }
+
+  private requestAndResolveLocation(): void {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          console.log("Latitude: " + lat + "\n" + "Longitude: " + lon);
+          this.sendToLocationResolver(lat, lon);
+        },
+        (error) => {
+          console.log("Location Status: PERMISSION_DENIED");
+          this.sendToLocationResolver();
+        }
+      );
+    } else {
+      this.sendToLocationResolver();
+    }
+  }
+
+  private sendToLocationResolver(lat?: number, lon?: number): void {
+    this.videoService.resolveUserLocation(lat, lon).subscribe({
+      next: (response) => {
+        console.log("Server Response: Location data processed successfully.");
+      },
+      error: (err) => {
+        console.error("Server Response: Error processing location data.", err);
+      }
+    });
   }
 }

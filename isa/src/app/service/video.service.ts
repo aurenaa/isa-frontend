@@ -87,4 +87,12 @@ export class VideoService {
         }
         return this.http.post(`${this._video_url}/${id}/dislike`, {}, { headers });
     }
+
+    resolveUserLocation(lat?: number, lon?: number): Observable<any[]> {
+        let url = `${this._video_url}/trending/local`;
+        if (lat != null && lon != null) {
+            url += `?lat=${lat}&lon=${lon}`;
+        }
+        return this.http.get<any[]>(url, { headers: this.getHeaders() });
+    }
 }
