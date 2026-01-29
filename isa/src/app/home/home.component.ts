@@ -47,7 +47,6 @@ export class HomeComponent implements OnInit {
       },
       error: (err) => console.error('Error getting trending videos:', err)
     });
-    this.requestAndResolveLocation();
   }
 
   private loadSinglePopularVideo(id: number) {
@@ -100,7 +99,8 @@ export class HomeComponent implements OnInit {
   private sendToLocationResolver(lat?: number, lon?: number): void {
     this.videoService.resolveUserLocation(lat, lon).subscribe({
       next: (response) => {
-        console.log("Server Response: Location data processed successfully.");
+        this.nearbyVideos = response;
+        console.log("Server Response: Location and videosd successfully.");
       },
       error: (err) => {
         console.error("Server Response: Error processing location data.", err);
@@ -109,26 +109,7 @@ export class HomeComponent implements OnInit {
   }
 
   private getNearbyVideos() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          this.videoService.getTrendingNearby(pos.coords.latitude, pos.coords.longitude).subscribe({
-            next: (videos) => {
-              this.nearbyVideos = videos;
-            },
-            error: (err) => console.error('Error fetching nearby videos:', err)
-          });
-        },
-        (err) => {
-          /* this.http.get<any>('http://ip-api.com/json').subscribe(res => {
-            this.videoService.getTrendingNearby(res.lat, res.lon).subscribe(
-              videos => this.nearbyVideos = videos
-            );
-          });
-          */
-        }
-      );
-    }
-  }
+      this.requestAndResolveLocation();
+   }
   
 }

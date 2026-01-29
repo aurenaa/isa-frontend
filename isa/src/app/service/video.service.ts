@@ -95,8 +95,4 @@ export class VideoService {
         }
         return this.http.get<any[]>(url, { headers: this.getHeaders() });
     } 
-    
-    getTrendingNearby(lat: number, lon: number, radius: number = 50): Observable<any[]> {
-        return this.http.get<any[]>(`${this._video_url}/trending-nearby?lat=${lat}&lon=${lon}&radius=${radius}`, { headers: this.getHeaders() });
-    }
 }
