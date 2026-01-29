@@ -107,6 +107,7 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
   private getNearbyVideos() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -129,4 +130,5 @@ export class HomeComponent implements OnInit {
       );
     }
   }
+  
 }
