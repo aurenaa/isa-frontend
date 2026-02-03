@@ -47,11 +47,19 @@
 
     <section class="video-section">
       <h2>Browse</h2>
-
       <div class="browse-grid">
         <div [routerLink]="['/video', v.id]" class="video-card pointer-cursor" *ngFor="let v of browseVideos">
-          <img [src]="'http://localhost:8080/api/videos/' + v.id + '/thumbnail'">
+          <div class="thumbnail-container">
+            <img [src]="'http://localhost:8080/api/videos/' + v.id + '/thumbnail'">
+            
+            <div *ngIf="v.scheduledTime && isFuture(v.scheduledTime)" class="incoming-tag">
+              INCOMING
+            </div>
+          </div>
           <div class="video-title">{{ v.title }}</div>
+          <div *ngIf="v.scheduledTime && isFuture(v.scheduledTime)" class="premiere-info">
+            <i class="bi bi-calendar-event"></i> Premiere: {{ v.scheduledTime | date:'MMM d, HH:mm' }}
+          </div>
         </div>
       </div>
     </section>

@@ -95,4 +95,13 @@ export class VideoService {
         }
         return this.http.get<any[]>(url, { headers: this.getHeaders() });
     } 
+
+    getStreamingStatus(id: number): Observable<any> {
+        const token = localStorage.getItem('jwt');
+        let headers = new HttpHeaders();
+        if (token) {
+            headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        return this.http.get(`${this._video_url}/${id}/streaming-status`, { headers });
+    }
 }
