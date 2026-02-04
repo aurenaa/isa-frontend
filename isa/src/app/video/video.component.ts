@@ -146,29 +146,32 @@ export class VideoComponent implements OnInit, OnDestroy {
   }
 
   runLogic(): void {
-    if (this.video.scheduledTime) {
-      const targetTime = new Date(this.video.scheduledTime).getTime();
-      if (targetTime > Date.now()) {
-        this.isWaiting = true;
-        this.videoStreamUrl = null;
-        this.cdr.detectChanges();
-        this.timerSubscription = interval(1000).subscribe(() => {
-          const diff = targetTime - Date.now();
-          if (diff <= 0) {
-            this.timerSubscription?.unsubscribe();
-            setTimeout(() => this.showVideo(), 2000);
+    this.videoService.getStreamingStatus(this.video.id).subscribe({
+        next: (status) => {
+          if (!status.available) {
+            this.isWaiting = true;
+            this.videoStreamUrl = null;
+            this.startCountdown(Math.abs(status.offsetSeconds) * 1000);
           } else {
-            this.updateClock(diff);
+            this.showVideo(status.offsetSeconds);
           }
-          this.cdr.detectChanges();
-        });
-        return;
-      }
-    }
-    this.showVideo();
+        },
+        error: (err) => {
+          if (this.video.scheduledTime) {
+            const targetTime = new Date(this.video.scheduledTime).getTime();
+            const diff = targetTime - Date.now();
+            if (diff > 0) {
+              this.isWaiting = true;
+              this.startCountdown(diff);
+              return;
+            }
+          }
+          this.showVideo();
+        }
+      });
   }
 
-  showVideo(): void {
+  showVideo(offset: number = 0): void {
     this.isWaiting = false;
     const ts = new Date().getTime();
     this.videoStreamUrl = `http://localhost:8080/api/videos/${this.video.id}/stream?v=${ts}`;
@@ -184,7 +187,11 @@ export class VideoComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       const v = document.querySelector('video') as HTMLVideoElement;
       if (v) {
-        if (this.video.scheduledTime) {
+        if (offset > 0) {
+          v.currentTime = offset;
+          this.preventSeek();
+        }
+        else if (this.video.scheduledTime) {
           const startTime = new Date(this.video.scheduledTime).getTime();
           const diffInSeconds = Math.floor((Date.now() - startTime) / 1000);
           if (diffInSeconds > 0 && diffInSeconds < (this.video.durationSeconds || 0)) {
@@ -202,15 +209,12 @@ export class VideoComponent implements OnInit, OnDestroy {
     const v = document.querySelector('video') as HTMLVideoElement;
     if (!v || !this.video.scheduledTime) return;
     const startTime = new Date(this.video.scheduledTime).getTime();
-    const durationMs = (this.video.durationSeconds || 0) * 1000;
     v.ontimeupdate = () => {
       const now = Date.now();
-      const diffInSeconds = Math.floor((now - startTime) / 1000);
-      if (now < (startTime + durationMs)) {
-        if (Math.abs(v.currentTime - diffInSeconds) > 2) v.currentTime = diffInSeconds;
-      } else {
-        v.ontimeupdate = null;
-      }
+      const serverCurrentTimeSeconds = Math.floor((now - startTime) / 1000);
+        if (v.currentTime > serverCurrentTimeSeconds) {
+            v.currentTime = serverCurrentTimeSeconds;
+        }
     };
   }
 
@@ -274,5 +278,22 @@ export class VideoComponent implements OnInit, OnDestroy {
         this.chatScrollContainer.nativeElement.scrollTop = this.chatScrollContainer.nativeElement.scrollHeight;
       }
     }, 100);
+  }
+
+  private startCountdown(diffMs: number) {
+    this.updateClock(diffMs);
+
+    this.timerSubscription = interval(1000).subscribe(() => {
+      diffMs -= 1000;
+      
+      if (diffMs <= 0) {
+        this.timerSubscription?.unsubscribe();
+        this.countdownText = '00:00:00';
+        setTimeout(() => this.runLogic(), 1000); 
+      } else {
+        this.updateClock(diffMs);
+      }
+      this.cdr.detectChanges();
+    });
   }
 }

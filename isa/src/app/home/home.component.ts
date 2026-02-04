@@ -110,6 +110,9 @@ export class HomeComponent implements OnInit {
 
   private getNearbyVideos() {
       this.requestAndResolveLocation();
-   }
+  }
   
+  isFuture(scheduledTime: string): boolean {
+    return new Date(scheduledTime) > new Date();
+  }
 }

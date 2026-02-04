@@ -108,3 +108,37 @@
   height: 174px;
   object-fit: cover;
 }
+
+.thumbnail-container {
+  position: relative;
+  width: 100%;
+}
+
+.thumbnail-container img {
+  border-radius: 12px;
+  display: block;
+}
+
+.incoming-tag {
+  position: absolute;
+  bottom: 12px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+.premiere-info {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #f43899; 
+  font-weight: 600;
+}
+
+.video-card:hover .incoming-tag {
+  background-color: rgba(244, 56, 153, 0.8);
+}
