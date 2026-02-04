@@ -209,15 +209,12 @@ export class VideoComponent implements OnInit, OnDestroy {
     const v = document.querySelector('video') as HTMLVideoElement;
     if (!v || !this.video.scheduledTime) return;
     const startTime = new Date(this.video.scheduledTime).getTime();
-    const durationMs = (this.video.durationSeconds || 0) * 1000;
     v.ontimeupdate = () => {
       const now = Date.now();
-      const diffInSeconds = Math.floor((now - startTime) / 1000);
-      if (now < (startTime + durationMs)) {
-        if (Math.abs(v.currentTime - diffInSeconds) > 2) v.currentTime = diffInSeconds;
-      } else {
-        v.ontimeupdate = null;
-      }
+      const serverCurrentTimeSeconds = Math.floor((now - startTime) / 1000);
+        if (v.currentTime > serverCurrentTimeSeconds) {
+            v.currentTime = serverCurrentTimeSeconds;
+        }
     };
   }
 

@@ -206,12 +206,6 @@
     color: white;
 }
 
-.is-live-premiere video::-webkit-media-controls-timeline,
-.is-live-premiere video::-webkit-media-controls-current-time-display {
-    display: none !important;
-}
-
-
 .video-main-content {
     display: flex;
     justify-content: center;
